@@ -11,13 +11,11 @@ def call() {
                     script {
                         if (params.CHOICE == 'gradle')
                         {
-                            def ejecucion = load 'gradle.groovy'
-                            ejecucion.call()
+                            'gradle.groovy'.call()
                         }
                         else
                         {
-                            def ejecucion = load 'maven.groovy'
-                            ejecucion.call()
+                            'maven.groovy'.call()
                         }
                     }
                 }
