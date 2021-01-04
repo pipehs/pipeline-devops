@@ -6,15 +6,16 @@
 
 def call(){
                     stage('check stages') {
+                        env.STAGE_NAME2 = 'sonar'
                         //String[] stages
                         stages = ['build & test','sonar','run','rest','nexus']
                         stagesToCheck = params.stage.split(';')
 
-                        for (int i=0; i < stagesToCheck.size(); i++) {
-                            if (!${stages}.containsValue(${stagesToCheck[i]})) {
-                                printl "No existe el stage ${stagesToCheck[i]}"
+                        for (i in stagesToCheck) {
+                            if (!stages.containsValue(i)) {
+                                printl "No existe el stage ${i}"
                                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                    sh "exit 1"
+                                    env.FAILURE_MESSAGE = "No existe el stage ${i}"
                                 }
                             }
                         }
