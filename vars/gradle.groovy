@@ -8,7 +8,7 @@ def call(){
 
                     stage('build & test') {
                         env.STAGE_NAME2 = 'build & test'
-                        sh './gradlewsss clean build'
+                        sh './gradlew clean build'
                     }
                     stage ('sonar') {
                         
@@ -18,20 +18,16 @@ def call(){
                         }
                     }
                     stage ('run') {
-                        
-                        sh './gradlewsss bootRun &'
+                        env.STAGE_NAME2 = 'run'
+                        sh './gradlew bootRun &'
                         sleep 20
                     }
                     stage ('rest') {
-                        environment { 
-                            STAGE_NAME2 = 'rest'
-                        }
+                        env.STAGE_NAME2 = 'rest'
                         sh 'curl -X GET http://localhost:8082/rest/mscovid/test?msg=testing'
                     }
                     stage ('nexus') {
-                        environment { 
-                            STAGE_NAME2 = 'nexus'
-                        }
+                        env.STAGE_NAME2 = 'nexus'
                         nexusPublisher nexusInstanceId: 'nexus',
                         nexusRepositoryId: 'test-nexus',
                         packages: [[$class: 'MavenPackage',
