@@ -25,7 +25,7 @@ def call(){
         stage('Compile') {
                 env.STAGE_NAME2 = 'Compile'
                 try {
-                    if (params.stage.contains(env.STAGE_NAME2)) {
+                    if (params.stage.contains(env.STAGE_NAME2) || params.stage == "") {
                         sh './mvnw clean compile -e'
                     }
                 }
@@ -38,7 +38,7 @@ def call(){
             stage('Test Code') {
                 env.STAGE_NAME2 = 'Test Code'
                 try {
-                    if (params.stage.contains(env.STAGE_NAME2)) {
+                    if (params.stage.contains(env.STAGE_NAME2) || params.stage == "") {
                         sh './mvnw clean test -e'
                     }
                 }
@@ -50,7 +50,7 @@ def call(){
             stage('Jar') {
                 env.STAGE_NAME2 = 'Jar'
                 try {
-                    if (params.stage.contains(env.STAGE_NAME2)) {
+                    if (params.stage.contains(env.STAGE_NAME2) || params.stage == "") {
                         sh './mvnw clean package -e'
                     }
                 }
@@ -62,7 +62,7 @@ def call(){
             stage('SonarQube analysis') {
                 env.STAGE_NAME2 = 'SonarQube analysis'
                 try {
-                    if (params.stage.contains(env.STAGE_NAME2)) {
+                    if (params.stage.contains(env.STAGE_NAME2) || params.stage == "") {
                         def scannerHome = tool 'sonar';
                         withSonarQubeEnv('Sonar') {
                             sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=ejemplo-gradle -Dsonar.java.binaries=build"
@@ -77,7 +77,7 @@ def call(){
             stage('uploadNexus') {
                 env.STAGE_NAME2 = 'uploadNexus'
                 try {
-                    if (params.stage.contains(env.STAGE_NAME2)) {
+                    if (params.stage.contains(env.STAGE_NAME2) || params.stage == "") {
                         nexusPublisher nexusInstanceId: 'nexus',
                         nexusRepositoryId: 'test-nexus',
                         packages: [[$class: 'MavenPackage',
