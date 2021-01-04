@@ -33,6 +33,7 @@ def call(){
                         }
                         catch (e) {
                             env.FAIL_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${STAGE_NAME2}]"
+                            error("Error")
                         }
                         
                     }
@@ -48,6 +49,7 @@ def call(){
                         }
                         catch (e) {
                             env.FAIL_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${STAGE_NAME2}]"
+                            error("Error")
                         }
                     }
                     stage ('run') {
@@ -60,6 +62,7 @@ def call(){
                         }
                         catch (e) {
                             env.FAIL_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${STAGE_NAME2}]"
+                            error("Error")
                         }
                     }
                     stage ('rest') {
@@ -71,6 +74,7 @@ def call(){
                         }
                         catch (e) {
                             env.FAIL_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${STAGE_NAME2}]"
+                            error("Error")
                         }
                     }
                     stage ('nexus') {
@@ -95,6 +99,7 @@ def call(){
                         }
                         catch (e) {
                             env.FAIL_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${STAGE_NAME2}]"
+                            error("Error")
                         }
                     }
 }
