@@ -5,13 +5,27 @@
 */
 
 def call(){
+                    stage('check stages') {
+                        //String[] stages
+                        stages = ['build & test','sonar','run','rest','nexus']
+                        stagesToCheck = params.stage.split(';')
+
+                        for (int i=0; i < stagesToCheck.size(); i++) {
+                            if (!${stages}.containsValue(${stagesToCheck[i]})) {
+                                printl "No existe el stage ${stagesToCheck[i]}"
+                                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                    sh "exit 1"
+                                }
+                            }
+                        }
+                    }
 
                     stage('build & test') {
                         env.STAGE_NAME2 = 'build & test'
                         sh './gradlew clean build'
                     }
                     stage ('sonar') {
-                        
+                        env.STAGE_NAME2 = 'sonar'
                         def scannerHome = tool 'sonar';
                         withSonarQubeEnv('Sonar') {
                             sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=ejemplo-gradle -Dsonar.java.binaries=build"
