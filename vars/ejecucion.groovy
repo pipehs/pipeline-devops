@@ -36,7 +36,7 @@ def call() {
             failure {
                 slackSend channel: 'U01E2R4SXRN', 
                 color: 'danger', 
-                message: ${FAILURE_MESSAGE}, 
+                message: "${FAILURE_MESSAGE}", 
                 teamDomain: 'dipdevopsusach2020', 
                 tokenCredentialId: 'slack-token'
             }
