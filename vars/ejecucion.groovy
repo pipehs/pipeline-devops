@@ -3,7 +3,6 @@ def call() {
         agent any
         environment { 
             USER_NAME = 'Felipe Herrera Seguel'
-            FAILURE_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${STAGE_NAME2}]"
         }
         parameters {
             choice(name:'CHOICE', choices:['gradle','maven'], description: 'Elección de herramienta de construcción')
@@ -26,6 +25,14 @@ def call() {
             }
         }
         post {
+            if (isset(FAILURE_MESSAGE2))
+            {
+                FAIL_MESSAGE = "No existe el stage ${i}"
+            }
+            else
+            {
+                FAIL_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${STAGE_NAME2}]"
+            }
             success {
                 slackSend channel: 'U01E2R4SXRN', 
                 color: 'good', 
@@ -36,7 +43,7 @@ def call() {
             failure {
                 slackSend channel: 'U01E2R4SXRN', 
                 color: 'danger', 
-                message: "${FAILURE_MESSAGE}", 
+                message: "${FAIL_MESSAGE}", 
                 teamDomain: 'dipdevopsusach2020', 
                 tokenCredentialId: 'slack-token'
             }

@@ -13,9 +13,8 @@ def call(){
 
                         for (i in stagesToCheck) {
                             if (!stages.containsAll(i)) {
-                                println "No existe el stage ${i}"
-                                env.FAILURE_MESSAGE = "No existe el stage ${i}"
-                                currentBuild.result = 'FAILURE'
+                                env.FAILURE_MESSAGE2 = 1
+                                error("No existe el stage ${i}")
                             }
                         }
                     }
