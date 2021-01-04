@@ -14,11 +14,11 @@ def call() {
                     script {
                         if (params.CHOICE == 'gradle')
                         {
-                            'gradle'.call()
+                            gradle.call()
                         }
                         else
                         {
-                            'maven'.call()
+                            maven.call()
                         }
                     }
                 }
