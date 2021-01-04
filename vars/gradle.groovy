@@ -12,7 +12,7 @@ def call(){
                         stagesToCheck = params.stage.split(';')
 
                         for (i in stagesToCheck) {
-                            if (!stages.containsValue(i)) {
+                            if (!stages.containsAll(i)) {
                                 printl "No existe el stage ${i}"
                                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                     env.FAILURE_MESSAGE = "No existe el stage ${i}"
