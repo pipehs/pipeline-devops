@@ -25,14 +25,7 @@ def call() {
             }
         }
         post {
-            if (isset(FAILURE_MESSAGE2))
-            {
-                FAIL_MESSAGE = "No existe el stage ${i}"
-            }
-            else
-            {
-                FAIL_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${STAGE_NAME2}]"
-            }
+            
             success {
                 slackSend channel: 'U01E2R4SXRN', 
                 color: 'good', 
