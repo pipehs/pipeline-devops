@@ -14,7 +14,7 @@ def call(){
                         if (params.stage != "")
                         {
                             for (i in stagesToCheck) {
-                                if (params.stage.contains(env.STAGE_NAME2) || params.stage == "") {
+                                if (params.stage.contains(env.STAGE_NAME2)) {
                                     env.FAIL_MESSAGE = "No existe el stage ${i}"
                                     error("No existe el stage ${i}")
                                 }
@@ -25,7 +25,9 @@ def call(){
         stage('Compile') {
                 env.STAGE_NAME2 = 'Compile'
                 try {
-                    sh './mvnw clean compile -e'
+                    if (params.stage.contains(env.STAGE_NAME2)) {
+                        sh './mvnw clean compile -e'
+                    }
                 }
                 catch (e) {
                     env.FAIL_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${STAGE_NAME2}]"
@@ -36,7 +38,9 @@ def call(){
             stage('Test Code') {
                 env.STAGE_NAME2 = 'Test Code'
                 try {
-                    sh './mvnw clean test -e'
+                    if (params.stage.contains(env.STAGE_NAME2)) {
+                        sh './mvnw clean test -e'
+                    }
                 }
                 catch (e) {
                     env.FAIL_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${STAGE_NAME2}]"
@@ -46,7 +50,9 @@ def call(){
             stage('Jar') {
                 env.STAGE_NAME2 = 'Jar'
                 try {
-                    sh './mvnw clean package -e'
+                    if (params.stage.contains(env.STAGE_NAME2)) {
+                        sh './mvnw clean package -e'
+                    }
                 }
                 catch (e) {
                     env.FAIL_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${STAGE_NAME2}]"
@@ -56,10 +62,12 @@ def call(){
             stage('SonarQube analysis') {
                 env.STAGE_NAME2 = 'SonarQube analysis'
                 try {
+                    if (params.stage.contains(env.STAGE_NAME2)) {
                         def scannerHome = tool 'sonar';
                         withSonarQubeEnv('Sonar') {
                             sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=ejemplo-gradle -Dsonar.java.binaries=build"
                         }
+                    }
                 }
                 catch (e) {
                     env.FAIL_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${STAGE_NAME2}]"
@@ -69,6 +77,7 @@ def call(){
             stage('uploadNexus') {
                 env.STAGE_NAME2 = 'uploadNexus'
                 try {
+                    if (params.stage.contains(env.STAGE_NAME2)) {
                         nexusPublisher nexusInstanceId: 'nexus',
                         nexusRepositoryId: 'test-nexus',
                         packages: [[$class: 'MavenPackage',
@@ -83,6 +92,7 @@ def call(){
                                 ]
                             ]
                         ]
+                    }
                 }
                 catch (e) {
                     env.FAIL_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${STAGE_NAME2}]"
