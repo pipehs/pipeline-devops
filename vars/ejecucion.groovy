@@ -4,7 +4,10 @@ def call() {
         environment { 
             USER_NAME = 'Felipe Herrera Seguel'
         }
-        parameters {choice(name:'CHOICE', choices:['gradle','maven'], description: 'Elección de herramienta de construcción')}
+        parameters {
+            choice(name:'CHOICE', choices:['gradle','maven'], description: 'Elección de herramienta de construcción')
+            string(name:'stage', defaultValue:'', description:'')
+        }
         stages {
             stage('Pipeline') {
                 steps {
