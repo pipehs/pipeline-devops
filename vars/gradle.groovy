@@ -3,6 +3,7 @@
 	def ejecucion = load 'script.groovy'
 	ejecucion.call()
 */
+import pipeline.*
 
 def call(){
     figlet 'gradle'
