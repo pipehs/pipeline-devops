@@ -7,10 +7,10 @@ import pipeline.*
 
 def call(){
     figlet 'gradle'
-    def pipelineStages = ['buildAndtest','sonar','run','rest','nexus']
+    def pipelineStages = ['buildAndtest','sonar','runJar','rest','nexus']
     def utils = new test.UtilMethods()
     def stages = utils.getValidatedStages(params.stage, pipelineStages)
-    
+    env.FAIL_MESSAGE = ""
     stages.each{
         stage(it){
             try {
@@ -35,7 +35,7 @@ def sonar() {
     }
 }
 
-def run() {
+def runJar() {
      sh './gradlew bootRun &'
     sleep 20
 }
