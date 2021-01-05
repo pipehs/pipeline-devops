@@ -8,6 +8,7 @@ def getValidatedStages(String chosenStages, ArrayList pipelineStages) {
             if (it in pipelineStages){
                 stages.add(it)
             } else {
+                env.FAIL_MESSAGE = "No existe el stage ${it}, por lo que no se pudo realizar la ejecución"
                 error "${it} no existe como Stage. Stages disponibles para ejecutar: ${pipelineStages}"
             }
         }
