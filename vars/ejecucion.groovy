@@ -12,6 +12,8 @@ def call() {
             stage('Pipeline') {
                 steps {
                     script {
+                        figlet params.CHOICE
+                        figlet 'Variables de Entorno'
                         sh 'env'
                         if (params.CHOICE == 'gradle')
                         {
