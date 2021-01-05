@@ -12,6 +12,7 @@ def call() {
             stage('Pipeline') {
                 steps {
                     script {
+                        sh 'env'
                         if (params.CHOICE == 'gradle')
                         {
                             gradle.call()
