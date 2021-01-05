@@ -7,7 +7,7 @@ import pipeline.*
 
 def call(){
     figlet 'gradle'
-    def pipelineStages = ['buildAndtest','sonar','runJar','rest','nexus']
+    def pipelineStages = ['buildAndTest','sonar','runJar','rest','nexus']
     def utils = new test.UtilMethods()
     def stages = utils.getValidatedStages(params.stage, pipelineStages)
     env.FAIL_MESSAGE = ""
