@@ -12,6 +12,7 @@ def call() {
             stage('Pipeline') {
                 steps {
                     script {
+                        println 'Herramienta de ejecución seleccionada: '. params.CHOICE
                         if (params.CHOICE == 'gradle')
                         {
                             gradle.call()
