@@ -57,7 +57,7 @@ def nexusCI() {
     packages: [[$class: 'MavenPackage',
         mavenAssetList: [[classifier: '',
             extension: 'jar',
-            filePath: "/root/.jenkins/workspace/pipeline-cd/build/DevOpsUsach2020-0.0.1-develop.jar"]],
+            filePath: "/root/.jenkins/workspace/ci-cd_pipeline-ci_develop/build/DevOpsUsach2020-0.0.1-develop.jar"]],
             mavenCoordinate: [
                 artifactId: 'DevOpsUsach2020',
                 groupId: 'com.devopsusach2020',
@@ -85,7 +85,7 @@ def nexusCD() {
     packages: [[$class: 'MavenPackage',
         mavenAssetList: [[classifier: '',
             extension: 'jar',
-            filePath: "/root/.jenkins/workspace/pipeline-cd/build/DevOpsUsach2020-release-v1-0-0.jar"]],
+            filePath: "/root/.jenkins/workspace/ci-cd/pipeline-cd/build/DevOpsUsach2020-release-v1-0-0.jar"]],
             mavenCoordinate: [
                 artifactId: 'DevOpsUsach2020',
                 groupId: 'com.devopsusach2020',
