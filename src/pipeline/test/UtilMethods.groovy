@@ -1,24 +1,44 @@
 package pipeline.test
 
-def getValidatedStages(String chosenStages, ArrayList pipelineStages) {
+def getValidatedStages(String chosenStages, ArrayList pipelineStages) 
+{
     def stages = []
 
-    if (chosenStages?.trim()) {
-        chosenStages.split(';').each{
-            if (it in pipelineStages){
+    if (chosenStages?.trim()) 
+    {
+        chosenStages.split(';').each
+        {
+            if (it in pipelineStages)
+            {
                 stages.add(it)
-            } else {
+            } 
+            else 
+            {
                 env.FAIL_MESSAGE = "No existe el stage ${it}, por lo que no se pudo realizar la ejecución"
                 error "${it} no existe como Stage. Stages disponibles para ejecutar: ${pipelineStages}"
             }
         }
         println "Validación de stages correcta. Se ejecutarán los siguientes stages en orden: ${stages}"
-    } else {
+    } 
+    else 
+    {
         stages = pipelineStages
         println "Parámetro de stages vacío. Se ejecutarán todos los stages en el siguiente orden: ${stages}"
     }
 
     return stages   
+}
+
+def getCiCdStages(String jobName) 
+{
+    if (params.stage.contains('pipeline-ci'))
+    {
+        return ['buildAndTest','sonar','runJar','rest','nexusCI']
+    }
+    else if (params.stage.contains('pipeline-cd'))
+    {
+        return ['downloadNexus','runDownloadedJar','rest','nexusCD']
+    }
 }
 
 return this
