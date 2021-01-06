@@ -69,12 +69,13 @@ def nexusCI() {
 
 //--Stages de entrega continua (CD)--//
 def downloadNexus() {
+    figlet 'downloadNexus'
     sh "curl -X GET -u admin:admin http://localhost:8081/repository/test-nexus/com/devopsusach2020/DevOpsUsach2020/0.0.1-develop/DevOpsUsach2020-0.0.1-develop.jar -O"
 }
 
 def runDownloadedJar() {
     figlet 'runDownloadedJar'
-    sh "nohup java -jar DevOpsUsach2020-0.0.1-develop.jar &"
+    sh "nohup java -jar /root/.jenkins/workspace/ci-cd/pipeline-cd/DevOpsUsach2020-0.0.1-develop.jar &"
     sleep 20
 }
 
@@ -85,7 +86,7 @@ def nexusCD() {
     packages: [[$class: 'MavenPackage',
         mavenAssetList: [[classifier: '',
             extension: 'jar',
-            filePath: "/root/.jenkins/workspace/ci-cd/pipeline-cd/build/libs/DevOpsUsach2020-release-v1-0-0.jar"]],
+            filePath: "/root/.jenkins/workspace/ci-cd/pipeline-cd/DevOpsUsach2020-release-v1-0-0.jar"]],
             mavenCoordinate: [
                 artifactId: 'DevOpsUsach2020',
                 groupId: 'com.devopsusach2020',
