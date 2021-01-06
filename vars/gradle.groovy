@@ -57,7 +57,7 @@ def nexusCI() {
     packages: [[$class: 'MavenPackage',
         mavenAssetList: [[classifier: '',
             extension: 'jar',
-            filePath: "build/DevOpsUsach2020-0.0.1-develop.jar"]],
+            filePath: "/root/.jenkins/workspace/ci-cd/pipeline-cd/DevOpsUsach2020-0.0.1-develop.jar"]],
             mavenCoordinate: [
                 artifactId: 'DevOpsUsach2020',
                 groupId: 'com.devopsusach2020',
