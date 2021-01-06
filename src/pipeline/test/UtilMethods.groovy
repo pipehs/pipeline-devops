@@ -31,13 +31,17 @@ def getValidatedStages(String chosenStages, ArrayList pipelineStages)
 
 def getCiCdStages(String jobName) 
 {
-    if (params.stage.contains('pipeline-ci'))
+    if (jobName.contains('pipeline-ci'))
     {
         return ['buildAndTest','sonar','runJar','rest','nexusCI']
     }
-    else if (params.stage.contains('pipeline-cd'))
+    else if (jobName.contains('pipeline-cd'))
     {
         return ['downloadNexus','runDownloadedJar','rest','nexusCD']
+    }
+    else
+    {
+        return false
     }
 }
 
