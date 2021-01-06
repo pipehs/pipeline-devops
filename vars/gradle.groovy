@@ -75,7 +75,7 @@ def downloadNexus() {
 
 def runDownloadedJar() {
     figlet 'runDownloadedJar'
-    sh "nohup java -jar DevOpsUsach2020-0.0.1-develop.jar &"
+    sh './gradlew bootRun &'
     sleep 20
 }
 
