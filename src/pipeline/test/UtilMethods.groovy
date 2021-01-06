@@ -33,10 +33,12 @@ def getCiCdStages(String jobName)
 {
     if (jobName.contains('pipeline-ci'))
     {
+        figlet 'Integración Continua'
         return ['buildAndTest','sonar','runJar','rest','nexusCI']
     }
     else if (jobName.contains('pipeline-cd'))
     {
+        figlet 'Entrega Continua'
         return ['downloadNexus','runDownloadedJar','rest','nexusCD']
     }
     else
