@@ -74,9 +74,12 @@ def downloadNexus() {
 
 def runDownloadedJar() {
     figlet 'runDownloadedJar'
+    sh "nohup java -jar DevOpsUsach2020-0.0.1-${GIT_BRANCH}.jar &"
+    sleep 20
 }
 
 def nexusCD() {
+    figlet 'nexusCD'
     nexusPublisher nexusInstanceId: 'nexus',
     nexusRepositoryId: 'test-nexus',
     packages: [[$class: 'MavenPackage',
