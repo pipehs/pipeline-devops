@@ -11,6 +11,7 @@ def call(){
     def stages = utils.getValidatedStages(params.stage, pipelineStages)
     env.FAIL_MESSAGE = ""
     stages.each{
+        figlet ${JOB_NAME}
         stage(it){
             try {
                 "${it}"()
@@ -40,7 +41,7 @@ def runJar() {
 }
 
 def rest() {
-    sh 'curl -X GET http://localhost:8082/rest/mscovid/test?msg=testing'
+    sh 'curl -X GET http://localhost:8081/rest/mscovid/test?msg=testing'
 }
 
 def nexusCI() {
