@@ -7,7 +7,6 @@ import pipeline.*
 
 def call(){
     figlet 'gradle'
-    def pipelineStages = ['buildAndTest','sonar','runJar','rest','nexus']
     def utils = new test.UtilMethods()
     def stages = utils.getValidatedStages(params.stage, pipelineStages)
     env.FAIL_MESSAGE = ""
@@ -44,7 +43,7 @@ def rest() {
     sh 'curl -X GET http://localhost:8082/rest/mscovid/test?msg=testing'
 }
 
-def nexus() {
+def nexusCI() {
     nexusPublisher nexusInstanceId: 'nexus',
     nexusRepositoryId: 'test-nexus',
     packages: [[$class: 'MavenPackage',
@@ -55,9 +54,12 @@ def nexus() {
                 artifactId: 'DevOpsUsach2020',
                 groupId: 'com.devopsusach2020',
                 packaging: 'jar',
-                version: '0.0.1'
+                version: "0.0.1-${GIT_BRANCH}"
             ]
     ]]
 }
 
+def nexusCD() {
+
+}
 return this;
