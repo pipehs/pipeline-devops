@@ -70,12 +70,12 @@ def nexusCI() {
 //--Stages de entrega continua (CD)--//
 def downloadNexus() {
     figlet 'downloadNexus'
-    sh "curl -X GET -u admin:admin http://localhost:8081/repository/test-nexus/com/devopsusach2020/DevOpsUsach2020/0.0.1-develop/DevOpsUsach2020-0.0.1-develop.jar -O"
+    sh "curl -X GET -u admin:fahs2002 http://localhost:8081/repository/test-nexus/com/devopsusach2020/DevOpsUsach2020/0.0.1-develop/DevOpsUsach2020-0.0.1-develop.jar -O"
 }
 
 def runDownloadedJar() {
     figlet 'runDownloadedJar'
-    sh "nohup java -jar /root/.jenkins/workspace/ci-cd/pipeline-cd/DevOpsUsach2020-0.0.1-develop.jar &"
+    sh "nohup java -jar DevOpsUsach2020-0.0.1-develop.jar &"
     sleep 20
 }
 
