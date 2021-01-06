@@ -57,24 +57,24 @@ def nexusCI() {
     packages: [[$class: 'MavenPackage',
         mavenAssetList: [[classifier: '',
             extension: 'jar',
-            filePath: "/root/.jenkins/workspace/ltibranch-pipeline_feature-nexus/build/DevOpsUsach2020-0.0.1-${GIT_BRANCH}.jar"]],
+            filePath: "/root/.jenkins/workspace/ltibranch-pipeline_feature-nexus/build/DevOpsUsach2020-0.0.1-develop.jar"]],
             mavenCoordinate: [
                 artifactId: 'DevOpsUsach2020',
                 groupId: 'com.devopsusach2020',
                 packaging: 'jar',
-                version: "0.0.1-${GIT_BRANCH}"
+                version: "0.0.1-develop"
             ]
     ]]
 }
 
 //--Stages de entrega continua (CD)--//
 def downloadNexus() {
-    sh "curl -X GET -u admin:admin http://localhost:8081/repository/test-nexus/com/devopsusach2020/DevOpsUsach2020/0.0.1-${GIT_BRANCH}/DevOpsUsach2020-0.0.1-${GIT_BRANCH}.jar -O"
+    sh "curl -X GET -u admin:admin http://localhost:8081/repository/test-nexus/com/devopsusach2020/DevOpsUsach2020/0.0.1-develop/DevOpsUsach2020-0.0.1-develop.jar -O"
 }
 
 def runDownloadedJar() {
     figlet 'runDownloadedJar'
-    sh "nohup java -jar DevOpsUsach2020-0.0.1-${GIT_BRANCH}.jar &"
+    sh "nohup java -jar DevOpsUsach2020-0.0.1-develop.jar &"
     sleep 20
 }
 
@@ -85,12 +85,12 @@ def nexusCD() {
     packages: [[$class: 'MavenPackage',
         mavenAssetList: [[classifier: '',
             extension: 'jar',
-            filePath: "/root/.jenkins/workspace/ltibranch-pipeline_feature-nexus/build/DevOpsUsach2020-0.0.1-${GIT_BRANCH}.jar"]],
+            filePath: "/root/.jenkins/workspace/ltibranch-pipeline_feature-nexus/build/DevOpsUsach2020-release-v1-0-0.jar"]],
             mavenCoordinate: [
                 artifactId: 'DevOpsUsach2020',
                 groupId: 'com.devopsusach2020',
                 packaging: 'jar',
-                version: "0.0.1-${GIT_BRANCH}"
+                version: "release-v1-0-0"
             ]
     ]]
 }
