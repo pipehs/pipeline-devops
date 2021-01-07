@@ -5,100 +5,96 @@
 */
 
 def call(){
-        stage('check stages') {
-                        env.STAGE_NAME2 = 'check stages'
-                        //String[] stages
-                        stages = ['Compile','Test Code','Jar','SonarQube analysis','uploadNexus']
-                        stagesToCheck = params.stage.split(';')
-                        
-                        if (params.stage != "")
-                        {
-                            for (i in stagesToCheck) {
-                                if (params.stage.contains(env.STAGE_NAME2)) {
-                                    env.FAIL_MESSAGE = "No existe el stage ${i}"
-                                    error("No existe el stage ${i}")
-                                }
-                            }
-                        }
-        }
+    figlet 'gradle'
+    def utils = new test.UtilMethods()
+    def pipelineStages = utils.getCiCdStages(JOB_NAME)
 
-        stage('Compile') {
-                env.STAGE_NAME2 = 'Compile'
-                try {
-                    if (params.stage.contains(env.STAGE_NAME2) || params.stage == "") {
-                        sh './mvnw clean compile -e'
-                    }
-                }
-                catch (e) {
-                    env.FAIL_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${STAGE_NAME2}]"
-                    error("Error")
-                }
+    if (!pipelineStages)
+    {
+        env.FAIL_MESSAGE = "Ejecución invalida; favor revise el Job que está ejecutando"
+        error FAIL_MESSAGE
+    }
+    def stages = utils.getValidatedStages(params.stage, pipelineStages)
+    env.FAIL_MESSAGE = ""
+    stages.each{
+        stage(it){
+            try {
+                "${it}"()
             }
-            
-            stage('Test Code') {
-                env.STAGE_NAME2 = 'Test Code'
-                try {
-                    if (params.stage.contains(env.STAGE_NAME2) || params.stage == "") {
-                        sh './mvnw clean test -e'
-                    }
-                }
-                catch (e) {
-                    env.FAIL_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${STAGE_NAME2}]"
-                    error("Error")
-                }
+            catch (e) {
+                env.FAIL_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${it}]"
+                error "Stage ${it} tiene problemas: ${e}"
             }
-            stage('Jar') {
-                env.STAGE_NAME2 = 'Jar'
-                try {
-                    if (params.stage.contains(env.STAGE_NAME2) || params.stage == "") {
-                        sh './mvnw clean package -e'
-                    }
-                }
-                catch (e) {
-                    env.FAIL_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${STAGE_NAME2}]"
-                    error("Error")
-                }
-            }
-            stage('SonarQube analysis') {
-                env.STAGE_NAME2 = 'SonarQube analysis'
-                try {
-                    if (params.stage.contains(env.STAGE_NAME2) || params.stage == "") {
-                        def scannerHome = tool 'sonar';
-                        withSonarQubeEnv('Sonar') {
-                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=ejemplo-gradle -Dsonar.java.binaries=build"
-                        }
-                    }
-                }
-                catch (e) {
-                    env.FAIL_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${STAGE_NAME2}]"
-                    error("Error")
-                }
-            }
-            stage('uploadNexus') {
-                env.STAGE_NAME2 = 'uploadNexus'
-                try {
-                    if (params.stage.contains(env.STAGE_NAME2) || params.stage == "") {
-                        nexusPublisher nexusInstanceId: 'nexus',
-                        nexusRepositoryId: 'test-nexus',
-                        packages: [[$class: 'MavenPackage',
-                            mavenAssetList: [[classifier: '',
-                                extension: 'jar',
-                                filePath: '/root/.jenkins/workspace/ltibranch-pipeline_feature-nexus/build/DevOpsUsach2020-0.0.1.jar']],
-                                mavenCoordinate: [
-                                    artifactId: 'DevOpsUsach2020',
-                                    groupId: 'com.devopsusach2020',
-                                    packaging: 'jar',
-                                    version: '0.0.1'
-                                ]
-                            ]
-                        ]
-                    }
-                }
-                catch (e) {
-                    env.FAIL_MESSAGE = "[${USER_NAME}] [${JOB_NAME}] [${params.CHOICE}]  Ejecución fallida en [${STAGE_NAME2}]"
-                    error("Error")
-                }
-            }
+        }
+    }
 }
+
+def buildAndTest() {
+    sh './mvnw clean compile -e'
+    sh './mvnw clean test -e'   
+}
+
+def sonar() {
+    def scannerHome = tool 'sonar';
+    withSonarQubeEnv('Sonar') {
+        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=ejemplo-gradle -Dsonar.java.binaries=build"
+    }
+}
+
+def runJar() {
+    sh './mvnw clean package -e'
+}
+
+def rest() {
+    figlet 'rest'
+    sh 'curl -X GET http://localhost:8082/rest/mscovid/test?msg=testing'
+}
+
+def nexusCI() {
+    figlet 'nexusCI'
+    nexusPublisher nexusInstanceId: 'nexus',
+    nexusRepositoryId: 'test-nexus',
+    packages: [[$class: 'MavenPackage',
+        mavenAssetList: [[classifier: '',
+            extension: 'jar',
+            filePath: "/root/.jenkins/workspace/ci-cd/pipeline-cd/DevOpsUsach2020-0.0.1-develop.jar"]],
+            mavenCoordinate: [
+                artifactId: 'DevOpsUsach2020',
+                groupId: 'com.devopsusach2020',
+                packaging: 'jar',
+                version: "0.0.1-develop"
+            ]
+    ]]
+}
+
+//--Stages de entrega continua (CD)--//
+def downloadNexus() {
+    figlet 'downloadNexus'
+    sh "curl -X GET -u admin:fahs2002 http://localhost:8081/repository/test-nexus/com/devopsusach2020/DevOpsUsach2020/0.0.1-develop/DevOpsUsach2020-0.0.1-develop.jar -O"
+}
+
+def runDownloadedJar() {
+    figlet 'runDownloadedJar'
+    sh "nohup java -jar /root/.jenkins/workspace/ci-cd/pipeline-cd/DevOpsUsach2020-0.0.1-develop.jar &"
+    sleep 10
+}
+
+def nexusCD() {
+    figlet 'nexusCD'
+    nexusPublisher nexusInstanceId: 'nexus',
+    nexusRepositoryId: 'test-nexus',
+    packages: [[$class: 'MavenPackage',
+        mavenAssetList: [[classifier: '',
+            extension: 'jar',
+            filePath: "/root/.jenkins/workspace/ci-cd/pipeline-cd/release-v1-0-0.jar"]],
+            mavenCoordinate: [
+                artifactId: 'DevOpsUsach2020',
+                groupId: 'com.devopsusach2020',
+                packaging: 'jar',
+                version: "release-v1-0-0"
+            ]
+    ]]
+}
+
 
 return this;
