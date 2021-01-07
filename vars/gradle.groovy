@@ -52,7 +52,7 @@ def runJar() {
 
 def rest() {
     figlet 'rest'
-    sh 'curl -X GET http://localhost:8082/rest/mscovid/test?msg=testing'
+    //sh 'curl -X GET http://localhost:8082/rest/mscovid/test?msg=testing'
 }
 
 def nexusCI() {
@@ -80,8 +80,7 @@ def downloadNexus() {
 
 def runDownloadedJar() {
     figlet 'runDownloadedJar'
-    sh './gradlew clean build'
-    sh './gradlew bootRun &'
+    sh "nohup java -jar /root/.jenkins/workspace/ci-cd/pipeline-cd/DevOpsUsach2020-0.0.1-develop.jar &"
     sleep 10
 }
 
