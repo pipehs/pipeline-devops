@@ -32,10 +32,12 @@ def call(){
 
 //--Stages de Integración continua--//
 def buildAndTest() {
+    figlet 'buildAndTest'
     sh './gradlew clean build'
 }
 
 def sonar() {
+    figlet 'sonar'
     def scannerHome = tool 'sonar';
     withSonarQubeEnv('Sonar') {
         sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=ejemplo-gradle -Dsonar.java.binaries=build"
@@ -43,15 +45,18 @@ def sonar() {
 }
 
 def runJar() {
+    figlet 'runJar'
      sh './gradlew bootRun &'
     sleep 20
 }
 
 def rest() {
+    figlet 'rest'
     sh 'curl -X GET http://localhost:8082/rest/mscovid/test?msg=testing'
 }
 
 def nexusCI() {
+    figlet 'nexusCI'
     nexusPublisher nexusInstanceId: 'nexus',
     nexusRepositoryId: 'test-nexus',
     packages: [[$class: 'MavenPackage',
@@ -75,8 +80,9 @@ def downloadNexus() {
 
 def runDownloadedJar() {
     figlet 'runDownloadedJar'
+    sh './gradlew clean build'
     sh './gradlew bootRun &'
-    sleep 20
+    sleep 10
 }
 
 def nexusCD() {
